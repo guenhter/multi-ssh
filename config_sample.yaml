@@ -1,0 +1,5 @@
+hosts:
+  - host1
+  - host2
+terminalHeight: 300
+terminalMinWidth: 600

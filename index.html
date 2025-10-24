@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <title>Multi SSH</title>
+    <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .app-layout {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-panel {
+            background: #333;
+            padding: 5px 10px;
+            border-bottom: 1px solid #444;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .terminals-container {
+            flex: 1;
+            display: flex;
+            margin: 5px;
+            gap: 5px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            align-content: flex-start;
+            overflow: auto;
+            padding-right: 5px; /* Account for scrollbar */
+        }
+
+        .terminal-wrapper {
+            border: 2px solid #444;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            height: 350px; /* Set default, will be overridden by JS */
+        }
+
+        .terminal-title-bar {
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+            border-bottom: 1px solid #444;
+        }
+
+        .terminal-container {
+            flex: 1;
+            background: #0c0c0c;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <div class="control-panel">
+            <label>
+                <input type="checkbox" id="send-to-all"> Send to All
+            </label>
+        </div>
+        <div class="terminals-container" id="terminals-container">
+            <!-- Terminals will be dynamically added here -->
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>
