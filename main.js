@@ -2,12 +2,41 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 const pty = require("node-pty");
 const fs = require("node:fs");
+const os = require("node:os");
 const yaml = require("js-yaml");
 
 // Keep a global reference of the window object
 let mainWindow;
 let ptyProcesses = []; // Array of terminal processes
 let config; // Will be loaded later
+
+function loadConfig() {
+    const configPaths = [
+        path.join(process.cwd(), "multi_ssh_config.yaml"),
+        path.join(os.homedir(), "multi_ssh_config.yaml"),
+        "/etc/multissh/multi_ssh_config.yaml",
+    ];
+
+    for (const configPath of configPaths) {
+        try {
+            if (fs.existsSync(configPath)) {
+                const configData = fs.readFileSync(configPath, "utf8");
+                console.log(`Config loaded from: ${configPath}`);
+                return yaml.load(configData);
+            }
+        } catch (error) {
+            // Continue to next path if this one fails
+            console.warn(
+                `Failed to load config from ${configPath}:`,
+                error.message,
+            );
+        }
+    }
+
+    throw new Error(
+        `Config file not found in any of the following locations: ${configPaths.join(", ")}`,
+    );
+}
 
 // This method will be called when Electron has finished initialization
 app.whenReady().then(() => {
@@ -71,9 +100,7 @@ function createWindow() {
         mainWindow.show();
         // Load and send config to renderer
         try {
-            config = yaml.load(
-                fs.readFileSync(path.join(__dirname, "config.yaml"), "utf8"),
-            );
+            config = loadConfig();
             mainWindow.webContents.send("config", config);
         } catch (error) {
             console.error("Failed to load config:", error);
