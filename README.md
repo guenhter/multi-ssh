@@ -33,7 +33,7 @@ pnpm dist   # Creating Distribution Package
 ### Project Structure
 
 ```
-electron-noob/
+multi-ssh/
 ├── main.js                 # Main Electron process with PTY integration
 ├── renderer.js             # Renderer process with xterm.js terminals
 ├── index.html              # Main UI layout

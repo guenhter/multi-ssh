@@ -1,13 +1,13 @@
 {
-    "name": "electron-noob",
+    "name": "multi-ssh",
     "version": "1.0.0",
     "description": "A sample Electron application",
     "main": "main.js",
     "scripts": {
         "start": "electron .",
         "dev": "electron . --enable-logging",
-        "build": "electron-builder",
-        "dist": "electron-builder --publish=never",
+        "build": "electron-forge package",
+        "dist": "electron-forge make",
         "check": "biome check",
         "check:write": "biome check --write"
     },
@@ -18,6 +18,9 @@
     ],
     "author": "Your Name",
     "license": "MIT",
+    "engines": {
+        "node": "22"
+    },
     "dependencies": {
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "^5.5.0",
@@ -25,22 +28,12 @@
         "node-pty": "^1.0.0"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.3.0",
+        "@biomejs/biome": "^2.3.1",
+        "@electron-forge/cli": "^7.10.2",
+        "@electron-forge/maker-deb": "^7.10.2",
+        "@electron-forge/maker-squirrel": "^7.10.2",
+        "@electron-forge/maker-zip": "^7.10.2",
         "@electron/rebuild": "^4.0.1",
-        "electron": "^27.0.0",
-        "electron-builder": "^24.6.4"
-    },
-    "build": {
-        "appId": "com.example.electron-noob",
-        "productName": "Electron Noob",
-        "directories": {
-            "output": "dist"
-        },
-        "files": [
-            "main.js",
-            "renderer.js",
-            "index.html",
-            "node_modules/**/*"
-        ]
+        "electron": "^38.4.0"
     }
 }
