@@ -7,6 +7,8 @@ const { FitAddon } = require("@xterm/addon-fit");
 let config;
 const terminals = [];
 const fitAddons = [];
+let lastPasteTime = 0;
+const PASTE_DEBOUNCE_MS = 100;
 
 // Display version information
 document.addEventListener("DOMContentLoaded", () => {
@@ -119,6 +121,43 @@ function initializeTerminals() {
 
         // Fit terminal to container
         fitAddon.fit();
+
+        // Handle copy/paste keyboard shortcuts
+        terminal.attachCustomKeyEventHandler((event) => {
+            // Handle copy (Ctrl+C or Cmd+C on Mac)
+            if ((event.ctrlKey || event.metaKey) && event.key === "c") {
+                // Only copy if there's a selection, otherwise let Ctrl+C work as interrupt
+                if (terminal.hasSelection()) {
+                    navigator.clipboard.writeText(terminal.getSelection());
+                    return false; // Prevent default behavior
+                }
+                return true; // Allow Ctrl+C to work as interrupt if no selection
+            }
+
+            // Handle paste (Ctrl+V or Cmd+V on Mac)
+            if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+                if (Date.now() - lastPasteTime < PASTE_DEBOUNCE_MS) return true;
+                lastPasteTime = Date.now();
+                navigator.clipboard.readText().then((text) => {
+                    if (sendToAll) {
+                        for (let j = 0; j < config.hosts.length; j++) {
+                            ipcRenderer.send("terminal-input", {
+                                index: j,
+                                data: text,
+                            });
+                        }
+                    } else {
+                        ipcRenderer.send("terminal-input", {
+                            index: i,
+                            data: text,
+                        });
+                    }
+                });
+                return true; // Having false here for some reason adds the text twice...
+            }
+
+            return true; // Allow all other keys to work normally
+        });
 
         // Handle terminal input
         terminal.onData((data) => {

@@ -25,9 +25,9 @@ hosts:
 ### Commands
 
 ```bash
-pnpm start  # Development Mode
-pnpm build  # Building the Application
-pnpm dist   # Creating Distribution Package
+npm run start  # Development Mode
+npm run build  # Building the Application
+npm run dist   # Creating Distribution Package
 ```
 
 ### Project Structure
