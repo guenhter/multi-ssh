@@ -8,6 +8,7 @@ A multi-SSH terminal application built with Electron, providing a unified interf
 - **Real Terminal Emulation**: Full shell integration with proper PTY support
 - **Modern UI**: Dark-themed interface with responsive design
 - **Send to All**: Option to broadcast commands to all connected terminals
+- **Copy/Paste Support**: Full keyboard shortcuts support (Ctrl+C/Ctrl+V or Cmd+C/Cmd+V on Mac)
 
 ## Configuration
 
