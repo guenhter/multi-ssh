@@ -134,21 +134,26 @@ function initializeTerminals() {
 
             // Handle paste (Ctrl+V or Cmd+V on Mac)
             if ((event.ctrlKey || event.metaKey) && event.key === "v") {
-                navigator.clipboard.readText().then((text) => {
-                    if (sendToAll) {
-                        for (let j = 0; j < config.hosts.length; j++) {
+                navigator.clipboard
+                    .readText()
+                    .then((text) => {
+                        if (sendToAll) {
+                            for (let j = 0; j < config.hosts.length; j++) {
+                                ipcRenderer.send("terminal-input", {
+                                    index: j,
+                                    data: text,
+                                });
+                            }
+                        } else {
                             ipcRenderer.send("terminal-input", {
-                                index: j,
+                                index: i,
                                 data: text,
                             });
                         }
-                    } else {
-                        ipcRenderer.send("terminal-input", {
-                            index: i,
-                            data: text,
-                        });
-                    }
-                });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to read from clipboard:", error);
+                    });
                 return false; // Prevent default behavior
             }
 
