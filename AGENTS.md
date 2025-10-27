@@ -16,5 +16,5 @@ multi-ssh is an electron app
 ## Commands
 
 ```bash
-pnpm start                  # Start the whole application
+npm run start                  # Start the whole application
 ```
