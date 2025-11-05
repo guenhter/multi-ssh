@@ -2,6 +2,9 @@
 
 A multi-SSH terminal application built with Electron, providing a unified interface to manage multiple SSH connections simultaneously using xterm.js for terminal emulation and node-pty for pseudo-terminal support.
 
+![Application Window](assets/window.gif)
+
+
 ## Features
 
 - **Multi-Terminal Interface**: Connect to multiple SSH hosts in separate terminal panes
