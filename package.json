@@ -19,21 +19,21 @@
     "author": "Your Name",
     "license": "MIT",
     "engines": {
-        "node": "22"
+        "node": "24"
     },
     "dependencies": {
         "@xterm/addon-fit": "^0.10.0",
         "@xterm/xterm": "^5.5.0",
         "js-yaml": "^4.1.0",
-        "node-pty": "^1.0.0"
+        "node-pty": "^1.1.0-beta39"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.3.1",
+        "@biomejs/biome": "^2.3.3",
         "@electron-forge/cli": "^7.10.2",
         "@electron-forge/maker-deb": "^7.10.2",
         "@electron-forge/maker-squirrel": "^7.10.2",
         "@electron-forge/maker-zip": "^7.10.2",
         "@electron/rebuild": "^4.0.1",
-        "electron": "^38.4.0"
+        "electron": "^39.1.0"
     }
 }
