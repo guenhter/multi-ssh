@@ -19,7 +19,7 @@
     "author": "Your Name",
     "license": "MIT",
     "engines": {
-        "node": "24"
+        "node": "22"
     },
     "dependencies": {
         "@xterm/addon-fit": "^0.10.0",
@@ -33,6 +33,7 @@
         "@electron-forge/maker-deb": "^7.10.2",
         "@electron-forge/maker-squirrel": "^7.10.2",
         "@electron-forge/maker-zip": "^7.10.2",
-        "electron": "^39.1.0"
+        "electron": "^39.1.0",
+        "electron-rebuild": "^3.2.9"
     }
 }

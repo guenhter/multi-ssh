@@ -85,6 +85,8 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
+            sandbox: false,
+            webSecurity: false,
         },
         icon: path.join(__dirname, "assets/ssh.png"), // Optional: add an icon
         titleBarStyle: "default",

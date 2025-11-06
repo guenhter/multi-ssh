@@ -1,10 +1,13 @@
 module.exports = {
     packagerConfig: {
-        asar: true,
+        asar: false, // Disable asar to allow native modules to work
         out: "dist",
         appBundleId: "com.github.guenhter.multi-ssh",
         productName: "Multi SSH",
         files: ["main.js", "renderer.js", "index.html", "node_modules/**/*"],
+        extraResource: [
+            "multi_ssh_config.sample.yaml"
+        ],
     },
     rebuildConfig: {},
     makers: [
