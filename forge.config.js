@@ -5,9 +5,7 @@ module.exports = {
         appBundleId: "com.github.guenhter.multi-ssh",
         productName: "Multi SSH",
         files: ["main.js", "renderer.js", "index.html", "node_modules/**/*"],
-        extraResource: [
-            "multi_ssh_config.sample.yaml"
-        ],
+        extraResource: ["multi_ssh_config.sample.yaml"],
     },
     rebuildConfig: {},
     makers: [

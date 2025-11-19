@@ -164,6 +164,7 @@ function initializeTerminal(index, shell, host) {
             code: exitCode,
             signal,
         });
+        ptyProcesses[index] = null;
     });
 
     ptyProcesses[index] = ptyProcess;
