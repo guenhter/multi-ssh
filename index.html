@@ -45,6 +45,20 @@
             padding-right: 5px; /* Account for scrollbar */
         }
 
+        /* Very wide main scrollbar to make it easy to grab the scrollbar and not use the one from the sub-terminal */
+        .terminals-container::-webkit-scrollbar {
+            width: 30px;
+        }
+
+        .terminals-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .terminals-container::-webkit-scrollbar-track {
+            background: #333;
+        }
+
         .terminal-wrapper {
             border: 2px solid #444;
             border-radius: 8px;
