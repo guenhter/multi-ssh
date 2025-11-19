@@ -4,7 +4,7 @@ A comprehensive guide for AI agents working on the multi-ssh project, providing 
 
 ## Project Overview
 
-multi-ssh is an electron app
+multi-ssh is an electron app allowing to connect to multiple ssh hosts at the same time wich one separate embedded terminal per session.
 
 ## General Guidelines
 
