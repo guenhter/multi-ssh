@@ -17,10 +17,13 @@ A multi-SSH terminal application built with Electron, providing a unified interf
 Create a `multi_ssh_config.yaml` file based on `multi_ssh_config.sample.yaml` with your SSH hosts:
 
 ```yaml
-hosts:
-  - user@host1
-  - user@host2
-  - user@host3
+hostGroups:
+  someHosts:
+    - host1
+    - host2
+  otherHosts:
+    - host2
+    - host3
 ```
 
 The config file can be stored in the following locations:
