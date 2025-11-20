@@ -7,7 +7,7 @@ const yaml = require("js-yaml");
 
 // Keep a global reference of the window object
 let mainWindow;
-let ptyProcesses = []; // Array of terminal processes
+let ptyProcesses = {}; // Object of terminal processes keyed by hostname
 let config; // Will be loaded later
 
 function loadConfig() {
@@ -43,26 +43,16 @@ app.whenReady().then(() => {
     createWindow();
 });
 
-ipcMain.on("renderer-ready", () => {
-    initializeAllTerminals();
-});
-
 // IPC handlers for terminal communication
-ipcMain.on("terminal-input", (_event, { index, data }) => {
-    if (ptyProcesses[index]) {
-        ptyProcesses[index].write(data);
-    } else {
-        // Fallback if process died
-        mainWindow?.webContents?.send(
-            `terminal-data-${index}`,
-            "\r\n\x1b[91mSSH session not available\x1b[0m\r\n$ ",
-        );
+ipcMain.on("terminal-input", (_event, { hostname, data }) => {
+    if (ptyProcesses[hostname]) {
+        ptyProcesses[hostname].write(data);
     }
 });
 
-ipcMain.on("terminal-resize", (_event, { index, cols, rows }) => {
-    if (ptyProcesses[index]) {
-        ptyProcesses[index].resize(cols, rows);
+ipcMain.on("terminal-resize", (_event, { hostname, cols, rows }) => {
+    if (ptyProcesses[hostname]) {
+        ptyProcesses[hostname].resize(cols, rows);
     }
 });
 
@@ -73,6 +63,21 @@ ipcMain.on("toggle-dev-tools", () => {
         } else {
             mainWindow.webContents.openDevTools();
         }
+    }
+});
+
+ipcMain.on("switch-host-group", (_event, groupName) => {
+    const hosts = config.hostGroups[groupName];
+    terminateAllTerminals();
+
+    mainWindow?.webContents?.send("clear-all-terminals");
+    if (hosts) {
+        // It can potentially happen that the renderer is not ready with the terminal creation
+        // but the initializeTerminalsForHosts is already working and is faster so the renderer
+        // won't show the content then of a terminal (in theory I guess). If this happens, we should
+        // redesign this process.
+        mainWindow?.webContents?.send("initialize-terminals", hosts);
+        initializeTerminalsForHosts(hosts);
     }
 });
 
@@ -97,6 +102,12 @@ function createWindow() {
     mainWindow.loadFile("index.html");
     mainWindow.removeMenu();
 
+    // Emitted when the window is closed
+    mainWindow.on("closed", () => {
+        terminateAllTerminals();
+        mainWindow = null;
+    });
+
     // Show window when ready to prevent visual flash
     mainWindow.once("ready-to-show", () => {
         mainWindow.show();
@@ -110,62 +121,68 @@ function createWindow() {
         }
         // Wait for renderer ready before initializing PTY
     });
-
-    // Emitted when the window is closed
-    mainWindow.on("closed", () => {
-        // Clean up PTY processes
-        ptyProcesses.forEach((process, _index) => {
-            if (process && !process.killed) {
-                process.kill();
-            }
-        });
-        ptyProcesses = [];
-        // Dereference the window object
-        mainWindow = null;
-    });
 }
 
-function initializeAllTerminals() {
+function terminateAllTerminals() {
+    // Clean up PTY processes
+    Object.values(ptyProcesses).forEach((process) => {
+        if (process) {
+            // Remove listeners to prevent any residual callbacks
+            process.removeAllListeners("data");
+            process.removeAllListeners("exit");
+            if (!process.killed) {
+                process.kill();
+            }
+        }
+    });
+
+    ptyProcesses = {};
+}
+
+function initializeTerminalsForHosts(hosts) {
     const shell = "ssh";
     console.log("Using shell:", shell);
 
-    for (let i = 0; i < config.hosts.length; i++) {
+    for (const hostname of hosts) {
         try {
-            initializeTerminal(i, shell, config.hosts[i]);
+            initializeTerminal(hostname, shell);
         } catch (error) {
-            console.error(`Failed to spawn SSH session ${i} process:`, error);
-            mainWindow?.webContents?.send(
-                `terminal-data-${i}`,
-                `\r\n\x1b[91mFailed to start SSH session ${i + 1}: ${error.message}\x1b[0m\r\n`,
+            console.error(
+                `Failed to spawn SSH session for ${hostname} process:`,
+                error,
             );
+            mainWindow?.webContents?.send("terminal-data", {
+                hostname,
+                data: `\r\n\x1b[91mFailed to start SSH session for ${hostname}: ${error.message}\x1b[0m\r\n`,
+            });
         }
     }
 }
 
 // Initialize PTY processes
-function initializeTerminal(index, shell, host) {
+function initializeTerminal(hostname, shell) {
     // Use node-pty for proper pseudo-terminal functionality
-    const ptyProcess = pty.spawn(shell, [host], {
+    const ptyProcess = pty.spawn(shell, [hostname], {
         name: "xterm-256color",
         cols: 80,
         rows: 24,
         cwd: process.env.HOME || process.env.USERPROFILE || "/",
         env: process.env,
     });
+    ptyProcesses[hostname] = ptyProcess;
 
     // Send data from PTY to renderer
     ptyProcess.onData((data) => {
-        mainWindow?.webContents?.send(`terminal-data-${index}`, data);
+        mainWindow?.webContents?.send("terminal-data", { hostname, data });
     });
 
     // Handle process exit
-    ptyProcess.onExit(({ exitCode, signal }) => {
-        mainWindow?.webContents?.send(`terminal-exit-${index}`, {
-            code: exitCode,
-            signal,
+    ptyProcess.onExit(({ exitCode, _signal }) => {
+        const exitMessage = `\r\n\x1b[91mSSH session to ${hostname} exited with code: ${exitCode}\x1b[0m\r\n`;
+        mainWindow?.webContents?.send("terminal-data", {
+            hostname,
+            data: exitMessage,
         });
-        ptyProcesses[index] = null;
+        delete ptyProcesses[hostname];
     });
-
-    ptyProcesses[index] = ptyProcess;
 }

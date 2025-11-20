@@ -1,3 +1,5 @@
 node_modules/
 out/
+.vscode/
+
 multi_ssh_config.yaml

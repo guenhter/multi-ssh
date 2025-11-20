@@ -1,5 +1,10 @@
-hosts:
-  - host1
-  - host2
+---
+hostGroups:
+  someHosts:
+    - host1
+    - host2
+  otherHosts:
+    - host2
+    - host3
 terminalHeight: 300
 terminalMinWidth: 600

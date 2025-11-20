@@ -18,3 +18,7 @@ multi-ssh is an electron app allowing to connect to multiple ssh hosts at the sa
 ```bash
 npm run start                  # Start the whole application
 ```
+
+## Conventions
+
+- **ipcRenderer frontend binding**: In the `renderer.js` keep all global `ipcRenderer` bindings like `ipcRenderer.on(...)` at the top
