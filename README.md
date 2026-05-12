@@ -37,21 +37,17 @@ The fist found config is used.
 
 ### Prerequisites
 
-https://www.npmjs.com/package/node-pty
-
-#### Linux
-
-```bash
-sudo apt install -y build-essential
-```
+* (nvm)[https://github.com/nvm-sh/nvm]
+* (just)[https://just.systems/]
+* `build-essential` (e.g. `sudo apt install -y build-essential`)
 
 ### Commands
 
 ```bash
-npm install    # Installing all dependencies
-npm run start  # Development Mode
-npm run build  # Building the Application
-npm run dist   # Creating Distribution Package
+just install # Installing all dependencies
+just start   # Development Mode
+just build   # Building the Application
+just dist    # Creating Distribution Package
 ```
 
 ### Project Structure
