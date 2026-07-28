@@ -24,16 +24,16 @@
     "dependencies": {
         "@xterm/addon-fit": "^0.11.0",
         "@xterm/xterm": "^6.0.0",
-        "js-yaml": "^4.1.1",
+        "js-yaml": "^5.2.2",
         "node-pty": "^1.1.0"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.4.15",
-        "@electron-forge/cli": "^7.11.1",
-        "@electron-forge/maker-deb": "^7.11.1",
-        "@electron-forge/maker-squirrel": "^7.11.1",
-        "@electron-forge/maker-zip": "^7.11.1",
-        "electron": "^42.0.1",
+        "@biomejs/biome": "^2.5.6",
+        "@electron-forge/cli": "^7.11.2",
+        "@electron-forge/maker-deb": "^7.11.2",
+        "@electron-forge/maker-squirrel": "^7.11.2",
+        "@electron-forge/maker-zip": "^7.11.2",
+        "electron": "^43.2.0",
         "electron-rebuild": "^3.2.9"
     }
 }
